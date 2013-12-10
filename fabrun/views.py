@@ -26,7 +26,7 @@ from fabrun.tasks import run_task
 
 import datetime
 
-KEYWORDS = ('[$AG:NeedGestion]', '[$AG:NeedKM]', '[$AG:NeedUser]')
+KEYWORDS = ('[$AG:NeedGestion]', '[$AG:NeedKM]', '[$AG:NeedUser]', '[$AG:NeedKomUser]', '[$AG:NeedSudo]', '[$AG:NeedMysqlPassword]', '[$AG:NeedSrvIp]')
 
 
 @login_required
