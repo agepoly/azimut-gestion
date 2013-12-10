@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from _wizard import _Wizard
 
 from django import forms
