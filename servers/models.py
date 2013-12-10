@@ -87,10 +87,26 @@ class Server(models.Model):
 
         return cox + ':' + str(port)
 
-    def get_port(self):
+    def get_external_port(self):
         """Get the port"""
-        # Hack, but easy way :D
-        return self.get_host_for_fabric().split(':')[-1]
+
+        port = 22
+
+        splited_cox = self.ssh_connection_string_from_backup.split(' ')
+
+        if '-p' in splited_cox:
+
+            next_is_port = False
+            for x in splited_cox:
+
+                if next_is_port:
+                    next_is_port = False
+                    port = x
+
+                if x == '-p':
+                    next_is_port = True
+
+        return str(port)
 
 
     def random_proxmox_password(self):
