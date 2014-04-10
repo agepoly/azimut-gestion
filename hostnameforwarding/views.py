@@ -163,6 +163,10 @@ server {
                 script += """        proxy_pass http://""" + host.server_to.internal_ip + """:""" + str(host.port_to) + """/;
         """
 
+            if host.port_from == 443 and settings.NGNIX_SSL_PEM != '' and settings.NGNIX_SSL_KEY != '':
+                script += """        proxy_redirect          http:// https://;
+        """
+
             script += """        access_log off;
         proxy_set_header        X-Real-IP       $remote_addr;
         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -175,22 +179,14 @@ server {
         if host.port_from == 443 and settings.NGNIX_SSL_PEM != '' and settings.NGNIX_SSL_KEY != '':
             script += """        ssl on;
     """
-            if host.domain != 'truffe.polylan.ch':
-                script += """        ssl_certificate      """ + settings.NGNIX_SSL_PEM + """;
-        """
-                script += """        ssl_certificate_key  """ + settings.NGNIX_SSL_KEY + """;
-        """
-            else:
-                script += """        ssl_certificate      """ + settings.NGNIX_SSL_PEM + """-polylan;
-        """
-                script += """        ssl_certificate_key  """ + settings.NGNIX_SSL_KEY + """-polylan;
-        """
-
+            script += """        ssl_certificate      """ + (host.custom_https_certificate_pem or settings.NGNIX_SSL_PEM) + """;
+    """
+            script += """        ssl_certificate_key  """ + (host.custom_https_certificate_key or settings.NGNIX_SSL_KEY) + """;
+    """
 
         if host.force_https:
                 script += """      return 301 https://$server_name$request_uri;
             """
-
 
         script += """
     }
